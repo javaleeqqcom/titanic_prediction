@@ -50,18 +50,18 @@ def words_statistic(string_array:pd.Series,pattern:str):
     words.sort(key=lambda k_c:(-k_c[1],k_c[0])) # 按频次降序排序
     return pd.DataFrame(words,columns=['key','count'])
 
-def get_title(words_statistic:pd.DataFrame(columns=['key','count']),key_list:pd.Series):
+def get_title(string_list:pd.Series,key_list:pd.Series):
     '''
-    
-    :param words_statistic: 
-    :param key_list: 
-    :return: 
+    :param string_list: string_list.shape=(n,)
+    :param key_list: key_list.shape=(m,)
+    :return:title_matrix.shape=(n,m)
+    从字符串string_list[i]特征中提取关键字符串key，并以所有关键字符串为列构造一个布尔矩阵title_matrix（以整型存储）。title_matrix[i][k]表示i号字符串中是否包含key_list[k]。
     '''
-    title_matrix=[None]*len(title_list)
-    for i,key in enumerate(title_list):
-        title_matrix[i]=list(int(key in name) for name in name_list)
+    title_matrix=[None]*len(key_list)
+    for i,key in enumerate(key_list):
+        title_matrix[i]=list(int(key in name) for name in string_list)
     title_matrix=pd.concat(tuple(map(pd.Series,title_matrix)),axis=1)
-    title_matrix.columns=title_list
+    title_matrix.columns=key_list
     return title_matrix
 
 train = pd.read_csv("train.csv")
